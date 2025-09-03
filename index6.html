@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Juego Azar - El Gran Casino Virtual</title>
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:700,400|Pacifico&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --azul: #2980b9;
+      --verde: #27ae60;
+      --rojo: #e74c3c;
+      --amarillo: #f7ca18;
+      --gris: #f7f7f7;
+      --negro: #222;
+    }
+    body {
+      margin: 0; padding: 0;
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(120deg, var(--gris), var(--azul) 70%);
+      color: var(--negro);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    header {
+      text-align: center;
+      padding: 2.5rem 1rem 1.5rem 1rem;
+      background: linear-gradient(90deg, var(--azul), var(--verde) 100%);
+      color: #fff;
+      box-shadow: 0 4px 18px rgba(41,128,185,0.13);
+    }
+    header h1 {
+      font-family: 'Pacifico', cursive;
+      font-size: 3rem;
+      letter-spacing: 2px;
+      margin-bottom: 0.5rem;
+      animation: casinoAnim 2s infinite alternate;
+    }
+    @keyframes casinoAnim {
+      from {transform: scale(1);}
+      to {transform: scale(1.05) rotate(-3deg);}
+    }
+    .container {
+      max-width: 800px;
+      margin: 2.5rem auto;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(41,128,185,0.15);
+      padding: 2rem 1rem 2.5rem 1rem;
+      position: relative;
+    }
+    .balance {
+      background: var(--gris);
+      color: var(--azul);
+      font-weight: bold;
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      text-align: center;
+      font-size: 1.15rem;
+      margin-bottom: 1.2rem;
+      box-shadow: 0 2px 8px rgba(41,128,185,0.10);
+    }
+    .juego-azar {
+      text-align: center;
+      margin-top: 2rem;
+    }
+    .selector-apuesta {
+      margin-bottom: 1.5rem;
+      display: flex;
+      justify-content: center;
+      gap: 1.2rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .selector-apuesta label {
+      font-weight: bold;
+      color: var(--verde);
+      margin-right: .7rem;
+    }
+    .selector-apuesta input, .selector-apuesta select {
+      font-size: 1.1rem;
+      padding: .4em .9em;
+      border-radius: 8px;
+      border: 1px solid var(--azul);
+      background: var(--gris);
+      font-family: 'Montserrat', sans-serif;
+      margin-right: .6rem;
+    }
+    .btn-jugar {
+      background: var(--verde);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      padding: .7em 2em;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.18s;
+      box-shadow: 0 2px 8px rgba(39,174,96,0.09);
+    }
+    .btn-jugar:hover {
+      background: var(--azul);
+      transform: scale(1.08);
+    }
+    .ruleta {
+      width: 230px;
+      height: 230px;
+      border-radius: 50%;
+      margin: 2.7rem auto 1.2rem auto;
+      background: conic-gradient(var(--amarillo) 0% 25%, var(--verde) 25% 50%, var(--rojo) 50% 75%, var(--azul) 75% 100%);
+      border: 8px solid var(--azul);
+      box-shadow: 0 5px 22px rgba(39,174,96,0.20);
+      position: relative;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.6rem;
+      animation: spinAnim 0s;
+      transition: transform 2s cubic-bezier(.19,1,.22,1);
+    }
+    .ruleta.girar {
+      animation: spinAnim 2.3s cubic-bezier(.19,1,.22,1);
+      animation-fill-mode: forwards;
+    }
+    @keyframes spinAnim {
+      from {transform: rotate(0deg);}
+      to {transform: rotate(1080deg);}
+    }
+    .ruleta-label {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -60%);
+      font-size: 1.8rem;
+      color: var(--negro);
+      font-family: 'Pacifico', cursive;
+      background: var(--amarillo);
+      padding: .3em 1em;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(247,202,24,0.13);
+      z-index: 2;
+      opacity: 0.95;
+    }
+    .resultado {
+      margin: 2.5rem auto 1.5rem auto;
+      font-size: 1.35rem;
+      color: var(--rojo);
+      background: var(--amarillo);
+      border-radius: 12px;
+      padding: 1em 2em;
+      font-weight: bold;
+      box-shadow: 0 2px 10px rgba(231,76,60,0.10);
+      font-family: 'Pacifico', cursive;
+      text-align: center;
+      display: none;
+      animation: resultadoAnim 1.3s;
+    }
+    @keyframes resultadoAnim {
+      0% {opacity:0;}
+      40% {opacity:1;}
+      90% {transform: scale(1.07);}
+      100% {transform: scale(1);}
+    }
+    .historial {
+      background: var(--gris);
+      color: var(--azul);
+      border-radius: 14px;
+      padding: 1rem 1.5rem;
+      margin-top: 2.5rem;
+      box-shadow: 0 2px 10px rgba(41,128,185,0.09);
+      max-width: 440px;
+      margin-left: auto;
+      margin-right: auto;
+      font-size: 1.05rem;
+    }
+    .historial h3 {
+      text-align: center;
+      color: var(--verde);
+      font-family: 'Pacifico', cursive;
+      margin-bottom: .5em;
+      font-size: 1.15rem;
+    }
+    .historial ul {
+      margin: 0;
+      padding-left: 1.2em;
+      list-style: none;
+    }
+    .historial li {
+      margin-bottom: .4em;
+      padding:.2em 0;
+      border-bottom: 1px dashed var(--azul);
+      font-family: 'Montserrat', sans-serif;
+    }
+    .btn-reset {
+      background: var(--rojo);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: bold;
+      padding: .3em 1.1em;
+      margin-top: 1rem;
+      cursor: pointer;
+      transition: background 0.3s;
+      box-shadow: 0 2px 8px rgba(231,76,60,0.11);
+    }
+    .btn-reset:hover {
+      background: var(--verde);
+    }
+    footer {
+      background: var(--azul); color: #fff;
+      text-align: center; padding: 1.2rem 0;
+      margin-top: 4rem;
+      font-size: 1rem;
+      letter-spacing: 1px;
+      border-radius: 0 0 16px 16px;
+      box-shadow: 0 -2px 10px rgba(41,128,185,0.09);
+    }
+    @media (max-width: 650px) {
+      .container { padding: 1rem;}
+      .ruleta { width: 170px; height: 170px; font-size: 1.8rem;}
+      .ruleta-label { font-size: 1.2rem;}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>El Gran Casino Virtual</h1>
+    <p>¡Siente la emoción del azar y reta a la suerte!</p>
+  </header>
+  <div class="container">
+    <div class="balance">
+      Saldo: <span id="saldo">1000</span> fichas
+    </div>
+    <div class="juego-azar">
+      <div class="selector-apuesta">
+        <label for="apuesta">Apuesta:</label>
+        <input type="number" id="apuesta" min="10" step="10" value="50">
+        <label for="color">Color:</label>
+        <select id="color">
+          <option value="amarillo">Amarillo</option>
+          <option value="verde">Verde</option>
+          <option value="rojo">Rojo</option>
+          <option value="azul">Azul</option>
+        </select>
+        <button class="btn-jugar" onclick="jugarAzar()" id="btnJugar">Jugar</button>
+      </div>
+      <div class="ruleta" id="ruleta">
+        <span class="ruleta-label" id="ruletaLabel">¿Listo?</span>
+      </div>
+      <div class="resultado" id="resultado"></div>
+    </div>
+    <div class="historial" id="historialDiv" style="display:none;">
+      <h3>Historial de partidas</h3>
+      <ul id="historial"></ul>
+      <button class="btn-reset" onclick="resetHistorial()">Limpiar historial</button>
+    </div>
+  </div>
+  <footer>
+    El Gran Casino Virtual &copy; 2025 | ¡Juega responsablemente y disfruta del azar!
+  </footer>
+  <script>
+    let saldo = 1000;
+    let historial = [];
+    let colores = ["amarillo", "verde", "rojo", "azul"];
+    let nombresColores = {
+      amarillo: "Amarillo",
+      verde: "Verde",
+      rojo: "Rojo",
+      azul: "Azul"
+    };
+    let premios = {
+      amarillo: 2,
+      verde: 3,
+      rojo: 5,
+      azul: 7
+    };
+
+    function actualizarSaldo() {
+      document.getElementById("saldo").textContent = saldo;
+    }
+
+    function jugarAzar() {
+      let apuesta = parseInt(document.getElementById("apuesta").value);
+      let colorElegido = document.getElementById("color").value;
+      let btnJugar = document.getElementById("btnJugar");
+      let resultadoDiv = document.getElementById("resultado");
+      let ruletaLabel = document.getElementById("ruletaLabel");
+      let ruleta = document.getElementById("ruleta");
+
+      resultadoDiv.style.display = "none";
+      if (isNaN(apuesta) || apuesta < 10) {
+        resultadoDiv.textContent = "La apuesta mínima es 10 fichas.";
+        resultadoDiv.style.display = "block";
+        resultadoDiv.style.background = "var(--rojo)";
+        resultadoDiv.style.color = "#fff";
+        return;
+      }
+      if (apuesta > saldo) {
+        resultadoDiv.textContent = "No tienes suficiente saldo para esa apuesta.";
+        resultadoDiv.style.display = "block";
+        resultadoDiv.style.background = "var(--rojo)";
+        resultadoDiv.style.color = "#fff";
+        return;
+      }
+      btnJugar.disabled = true;
+      ruleta.classList.add("girar");
+      ruletaLabel.textContent = "Girando...";
+      setTimeout(() => {
+        ruleta.classList.remove("girar");
+        let colorRuleta = colores[Math.floor(Math.random() * colores.length)];
+        ruletaLabel.textContent = nombresColores[colorRuleta];
+        let premio = premios[colorRuleta] * apuesta;
+        let mensaje = "";
+        let resultado = "";
+        if (colorElegido === colorRuleta) {
+          saldo += premio;
+          mensaje = `¡Felicidades! La ruleta cayó en <b>${nombresColores[colorRuleta]}</b>.<br>
+            Ganaste <span style="color:var(--verde);">${premio}</span> fichas.`;
+          resultado = `Ganaste ${premio} fichas apostando a ${nombresColores[colorRuleta]}`;
+          resultadoDiv.style.background = "var(--verde)";
+          resultadoDiv.style.color = "#fff";
+        } else {
+          saldo -= apuesta;
+          mensaje = `La ruleta cayó en <b>${nombresColores[colorRuleta]}</b>.<br>
+            Perdiste <span style="color:var(--rojo);">${apuesta}</span> fichas.`;
+          resultado = `Perdiste ${apuesta} fichas apostando a ${nombresColores[colorElegido]} (Ganó ${nombresColores[colorRuleta]})`;
+          resultadoDiv.style.background = "var(--rojo)";
+          resultadoDiv.style.color = "#fff";
+        }
+        resultadoDiv.innerHTML = mensaje;
+        resultadoDiv.style.display = "block";
+        actualizarSaldo();
+        btnJugar.disabled = false;
+        guardarHistorial(resultado, saldo);
+      }, 2400);
+    }
+
+    function guardarHistorial(resultado, saldoFinal) {
+      historial.unshift(`${resultado} (Saldo: ${saldoFinal})`);
+      if (historial.length > 10) historial.pop();
+      mostrarHistorial();
+    }
+
+    function mostrarHistorial() {
+      let historialDiv = document.getElementById("historialDiv");
+      let lista = document.getElementById("historial");
+      lista.innerHTML = "";
+      historial.forEach((item,i)=>{
+        let li = document.createElement("li");
+        li.innerHTML = item;
+        lista.appendChild(li);
+      });
+      historialDiv.style.display = historial.length > 0 ? "block" : "none";
+    }
+
+    function resetHistorial() {
+      historial = [];
+      mostrarHistorial();
+    }
+
+    actualizarSaldo();
+  </script>
+</body>
+</html>

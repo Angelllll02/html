@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Guatemala Creativa</title>
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:700,400|Pacifico&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --azul: #247ba0;
+      --turquesa: #70c1b3;
+      --amarillo: #ffe066;
+      --rosa: #ff6f91;
+      --verde: #6bcf6b;
+      --gris: #f8f8f8;
+    }
+    body {
+      margin:0; padding:0;
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(120deg, var(--gris), var(--turquesa) 90%);
+      color: #222;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+    header {
+      background: linear-gradient(90deg, var(--azul), var(--turquesa));
+      color: #fff; text-align: center;
+      padding: 2.5rem 1rem 1.5rem 1rem;
+      box-shadow: 0 2px 12px rgba(36,123,160,0.10);
+      position: relative;
+      overflow: hidden;
+    }
+    header h1 {
+      font-family: 'Pacifico', cursive;
+      font-size: 3rem;
+      letter-spacing: 2px;
+      animation: floatTitle 2s infinite alternate;
+    }
+    @keyframes floatTitle {
+      from { transform: translateY(0);}
+      to { transform: translateY(-12px);}
+    }
+    header::after {
+      content: "";
+      position: absolute;
+      left: -100px; top: 20px;
+      width: 260px; height: 100px;
+      background: radial-gradient(circle, var(--amarillo) 70%, transparent 100%);
+      opacity: 0.3;
+      transform: rotate(-12deg);
+      z-index: 0;
+    }
+    nav {
+      display: flex; justify-content: center; gap: 2rem;
+      background: var(--gris); box-shadow: 0 2px 8px rgba(36,123,160,0.05);
+      font-size: 1.1rem; padding: 1rem 0 0.5rem 0; margin-bottom: 2rem;
+      position: sticky; top: 0; z-index: 2;
+    }
+    nav a {
+      color: var(--azul); text-decoration: none;
+      transition: color 0.3s;
+      font-weight: bold;
+      position: relative;
+    }
+    nav a::after {
+      content: '';
+      display: block;
+      width: 0;
+      height: 2px;
+      background: var(--rosa);
+      transition: width .3s;
+      position: absolute; left: 0; bottom: -2px;
+    }
+    nav a:hover::after {
+      width: 100%;
+    }
+    nav a:hover {
+      color: var(--amarillo);
+    }
+    section {
+      max-width: 900px; margin: 2rem auto;
+      background: #fff; border-radius: 22px;
+      box-shadow: 0 4px 16px rgba(36,123,160,0.09);
+      padding: 2.2rem 1.2rem;
+      animation: fadeInUp 1s;
+      position: relative;
+    }
+    @keyframes fadeInUp {
+      from { opacity:0; transform: translateY(30px);}
+      to { opacity:1; transform: translateY(0);}
+    }
+    h2 {
+      color: var(--azul); margin-top: 0;
+      font-size: 2rem;
+      font-family: 'Pacifico', cursive;
+      letter-spacing: 1px;
+    }
+    .curiosidades, .refran, .interactivo {
+      background: linear-gradient(90deg, var(--turquesa) 10%, var(--gris) 70%);
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 9px rgba(36,123,160,0.06);
+      font-size: 1.08rem;
+    }
+    .curiosidades ul {
+      padding-left: 1.5rem;
+      margin: 0;
+    }
+    .gastronomia-lista li {
+      margin-bottom: .5rem;
+      position: relative;
+      padding-left: 1.2em;
+    }
+    .gastronomia-lista li::before {
+      content: "🍴";
+      position: absolute; left: 0; top: 0;
+      font-size: 1.05em;
+    }
+    .frases {
+      margin: 1rem 0;
+      background: var(--amarillo);
+      color: var(--azul);
+      border-radius: 8px;
+      padding: 0.8rem 1rem;
+      font-size: 1.13rem;
+      font-family: 'Pacifico', cursive;
+      box-shadow: 0 2px 8px rgba(255, 224, 102, 0.13);
+      text-align: center;
+      letter-spacing: 1px;
+    }
+    .interactivo {
+      text-align: center;
+      margin-top: 1rem;
+    }
+    .refran {
+      color: var(--rosa); font-size: 1.15rem;
+      font-family: 'Pacifico', cursive;
+      margin-top: 1rem;
+      transition: color .4s;
+      text-shadow: 1px 1px 10px var(--amarillo);
+    }
+    button {
+      background: var(--rosa); color: #fff;
+      border: none; border-radius: 8px;
+      font-size: 1rem;
+      font-weight: bold;
+      padding: .6em 1.5em;
+      margin-top: 1rem;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+      box-shadow: 0 2px 8px rgba(255,111,145,0.12);
+    }
+    button:hover {
+      background: var(--azul);
+      transform: scale(1.05);
+    }
+    .destacado {
+      background: var(--verde); color: #fff;
+      font-weight: bold; border-radius: 8px;
+      padding: 0.5em 0.8em;
+      display: inline-block; margin: 0.5em 0;
+    }
+    footer {
+      background: var(--azul); color: #fff;
+      text-align: center; padding: 1.2rem 0;
+      margin-top: 4rem;
+      font-size: 1rem;
+      letter-spacing: 1px;
+      border-radius: 0 0 16px 16px;
+      box-shadow: 0 -2px 10px rgba(36,123,160,0.09);
+    }
+    @media (max-width: 800px) {
+      section { padding: 1rem;}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Guatemala Creativa</h1>
+    <p>Descubre un país lleno de colores, sabores y magia</p>
+  </header>
+  <nav>
+    <a href="#curiosidades">Curiosidades</a>
+    <a href="#cultura">Cultura</a>
+    <a href="#gastronomia">Gastronomía</a>
+    <a href="#frase">Frase Maya</a>
+    <a href="#refran">Refrán Aleatorio</a>
+  </nav>
+
+  <section id="curiosidades" class="curiosidades">
+    <h2>Curiosidades de Guatemala</h2>
+    <ul>
+      <li>Guatemala es conocida como el <span class="destacado">Corazón del Mundo Maya</span> y posee más de 22 idiomas indígenas.</li>
+      <li>En Chichicastenango, cada jueves y domingo el mercado se llena de colores, aromas y leyendas mayas.</li>
+      <li>El Quetzal, símbolo nacional, es uno de los pájaros más bellos y representa la libertad.</li>
+      <li>La marimba es el instrumento nacional y su sonido acompaña fiestas, ferias y momentos especiales.</li>
+      <li>Guatemala celebra el <span class="destacado">Día de los Barriletes Gigantes</span> en Sumpango y Santiago Sacatepéquez, con obras de arte voladoras hechas de papel.</li>
+      <li>El país tiene más de 30 volcanes, entre ellos el Volcán de Fuego, que está activo y a veces ilumina la noche.</li>
+    </ul>
+  </section>
+
+  <section id="cultura" class="curiosidades">
+    <h2>Cultura y Tradiciones</h2>
+    <ul>
+      <li>El <span class="destacado">huipil</span> y el <span class="destacado">corte</span> son prendas tradicionales llenas de símbolos y colores que cuentan historias de cada región.</li>
+      <li>Durante la Semana Santa, las calles se cubren de alfombras hechas de aserrín de colores y flores.</li>
+      <li>Los pueblos celebran con bailes, procesiones, ferias y fuegos artificiales que iluminan el cielo.</li>
+      <li>La leyenda del <span class="destacado">Sombrerón</span> y la <span class="destacado">Llorona</span> forman parte del folclore guatemalteco.</li>
+    </ul>
+  </section>
+
+  <section id="gastronomia" class="curiosidades">
+    <h2>Gastronomía Típica</h2>
+    <ul class="gastronomia-lista">
+      <li><strong>Pepián:</strong> Guiso ancestral con carne, verduras y especias.</li>
+      <li><strong>Jocón:</strong> Pollo en salsa de tomate verde y cilantro.</li>
+      <li><strong>Rellenitos:</strong> Plátano maduro relleno de frijol dulce y frito.</li>
+      <li><strong>Tamales:</strong> Masa de maíz, carne y salsa, envueltos en hojas de plátano.</li>
+      <li><strong>Atol de elote:</strong> Bebida dulce y cremosa hecha de maíz tierno.</li>
+    </ul>
+  </section>
+
+  <section id="frase">
+    <h2>Frase Maya Inspiradora</h2>
+    <div class="frases" id="fraseMaya">
+      "Ruk’ux ri ulew, k’a ri a q’ij, k’a ri a b’atz’ – El corazón de la tierra, la fuerza del sol y el hilo de la vida."
+    </div>
+    <div class="interactivo">
+      <button onclick="nuevaFrase()">Otra frase maya</button>
+    </div>
+  </section>
+
+  <section id="refran">
+    <h2>Refrán Guatemalteco Aleatorio</h2>
+    <div class="refran" id="refranText">
+      "A quien madruga, Dios le ayuda."
+    </div>
+    <div class="interactivo">
+      <button onclick="nuevoRefran()">¡Cambia el refrán!</button>
+    </div>
+  </section>
+
+  <footer>
+    Guatemala Creativa &copy; 2025 | Hecho para celebrar la diversidad y alegría chapina
+  </footer>
+
+  <script>
+    // Frases mayas inspiradoras
+    const frasesMayas = [
+      "Ruk’ux ri ulew, k’a ri a q’ij, k’a ri a b’atz’ – El corazón de la tierra, la fuerza del sol y el hilo de la vida.",
+      "K’a ri k’aslem, k’a ri qak’ul, k’a ri qachoch – Vida, fuerza y hogar.",
+      "Junam k’aslem, junam q’ij – Somos uno en vida, uno bajo el sol.",
+      "Nan ulew, nan q’ij, nan b’atz’ – Madre tierra, madre sol, madre hilo.",
+      "Qach’och’ qak’aslem, qak’ul ri junam – Nuestro hogar y vida, nuestra unión.",
+      "Ruk’ux ri q’atb’al, qak’ul ri qak’aslem – Corazón de la montaña, fuerza de la vida."
+    ];
+    function nuevaFrase() {
+      const index = Math.floor(Math.random() * frasesMayas.length);
+      document.getElementById('fraseMaya').textContent = frasesMayas[index];
+    }
+
+    // Refranes guatemaltecos
+    const refranes = [
+      "A quien madruga, Dios le ayuda.",
+      "No por mucho madrugar amanece más temprano.",
+      "El que nace para tamal, del cielo le caen las hojas.",
+      "Más vale pájaro en mano que cien volando.",
+      "Al mal tiempo, buena cara.",
+      "De tal palo, tal astilla.",
+      "Donde manda capitán, no gobierna marinero.",
+      "Camarón que se duerme, se lo lleva la corriente.",
+      "El que busca, encuentra.",
+      "Aunque la mona se vista de seda, mona se queda.",
+      "Barriga llena, corazón contento.",
+      "Agua que no has de beber, déjala correr."
+    ];
+    function nuevoRefran() {
+      const index = Math.floor(Math.random() * refranes.length);
+      document.getElementById('refranText').textContent = refranes[index];
+    }
+  </script>
+</body>
+</html>

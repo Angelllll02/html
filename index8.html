@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Reloj Mundial Interactivo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Un reloj mundial interactivo, visual, animado y elegante.">
+  <style>
+    :root {
+      --panel-bg: #fff;
+      --main-bg: linear-gradient(120deg, #1e90ff 0%, #56cc9d 100%);
+      --accent: #8e44ad;
+      --accent2: #27ae60;
+      --accent3: #f9ca24;
+      --danger: #e74c3c;
+      --shadow: 0 10px 40px rgba(44, 62, 80, 0.13);
+      --radius: 28px;
+      --font: 'Segoe UI', Arial, sans-serif;
+    }
+    body {
+      background: var(--main-bg);
+      font-family: var(--font);
+      color: #222;
+      margin: 0;
+      min-height: 100vh;
+      transition: background 0.3s;
+    }
+    .container {
+      max-width: 440px;
+      margin: 40px auto;
+      background: var(--panel-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 32px 18px 28px 18px;
+      border: 2px solid var(--accent);
+      position: relative;
+      text-align: center;
+    }
+    h1 {
+      text-align: center;
+      font-size: 2.35rem;
+      margin-top: 0;
+      color: var(--accent);
+      letter-spacing: 1.5px;
+      text-shadow: 0 2px 8px #8e44ad18;
+      margin-bottom: 12px;
+    }
+    .subtitle {
+      text-align: center;
+      font-size: 1.11rem;
+      margin-bottom: 20px;
+      color: #27ae60;
+      font-weight: 500;
+      letter-spacing: 0.7px;
+    }
+    .world-clock-face {
+      margin: 0 auto 18px auto;
+      width: 270px;
+      height: 270px;
+      background: radial-gradient(circle at 50% 57%, #f6f6fa 80%, #d1d8e0 100%);
+      border-radius: 50%;
+      box-shadow: 0 8px 38px #8e44ad15, 0 2px 12px #27ae6011;
+      border: 6px solid #27ae60;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: visible;
+      transition: box-shadow 0.2s;
+    }
+    .clock-center {
+      position: absolute;
+      left: 50%; top: 50%;
+      width: 24px; height: 24px;
+      background: #8e44ad;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 2px 7px #8e44ad56;
+      z-index: 2;
+      border: 3px solid #fff;
+    }
+    .hand {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform-origin: bottom center;
+      transform: translate(-50%, -100%) rotate(0deg);
+      transition: background 0.2s;
+      z-index: 1;
+    }
+    .hand.hour {
+      width: 10px;
+      height: 63px;
+      background: var(--accent);
+      border-radius: 7px;
+      box-shadow: 0 2px 8px #8e44ad33;
+    }
+    .hand.minute {
+      width: 7px;
+      height: 94px;
+      background: var(--accent2);
+      border-radius: 4px;
+      box-shadow: 0 2px 8px #27ae6033;
+    }
+    .hand.second {
+      width: 3px;
+      height: 114px;
+      background: var(--accent3);
+      border-radius: 2px;
+      box-shadow: 0 1px 4px #f9ca2455;
+    }
+    .clock-label {
+      position: absolute;
+      color: #27ae60;
+      font-weight: bold;
+      font-size: 1.13rem;
+      user-select: none;
+      pointer-events: none;
+      text-shadow: 0 1px 6px #27ae6030;
+    }
+    .digital-time {
+      font-size: 2.05rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+      letter-spacing: 2px;
+      color: #2980b9;
+      text-shadow: 0 2px 8px #56cc9d18;
+    }
+    .city-select {
+      display: block;
+      width: 90%;
+      margin: 16px auto 11px auto;
+      padding: 9px 13px;
+      border-radius: 10px;
+      border: 2px solid #27ae60;
+      font-size: 1.16rem;
+      background: #f8fbff;
+      color: #222;
+      box-shadow: 0 2px 8px #27ae6022;
+      outline: none;
+      transition: border-color 0.24s;
+    }
+    .city-select:focus {
+      border-color: #8e44ad;
+    }
+    .city-label {
+      font-size: 1.17rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 7px;
+      letter-spacing: 1px;
+    }
+    .timezone-desc {
+      font-size: 0.99rem;
+      color: #27ae60;
+      margin-bottom: 6px;
+      letter-spacing: 1px;
+    }
+    .footer {
+      text-align: center;
+      font-size: 0.97rem;
+      margin-top: 8px;
+      color: #8e44ad;
+      opacity: 0.8;
+      padding-bottom: 10px;
+      letter-spacing: 1px;
+    }
+    @media (max-width: 600px) {
+      .container { padding: 10px 2px; }
+      h1 { font-size: 1.45rem; }
+      .world-clock-face { width: 190px; height: 190px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🌎 Reloj Mundial Interactivo</h1>
+    <div class="subtitle">Elige una ciudad y observa la hora local en un reloj analógico y digital</div>
+    <div class="city-label">Ciudad:</div>
+    <select class="city-select" id="citySelect">
+      <option value="America/Guatemala" selected>Guatemala</option>
+      <option value="America/Mexico_City">Ciudad de México</option>
+      <option value="America/Bogota">Bogotá</option>
+      <option value="America/Santiago">Santiago</option>
+      <option value="America/Argentina/Buenos_Aires">Buenos Aires</option>
+      <option value="America/New_York">Nueva York</option>
+      <option value="America/Los_Angeles">Los Ángeles</option>
+      <option value="Europe/London">Londres</option>
+      <option value="Europe/Madrid">Madrid</option>
+      <option value="Europe/Paris">París</option>
+      <option value="Europe/Moscow">Moscú</option>
+      <option value="Asia/Dubai">Dubái</option>
+      <option value="Asia/Tokyo">Tokio</option>
+      <option value="Asia/Shanghai">Shanghái</option>
+      <option value="Australia/Sydney">Sídney</option>
+      <option value="Pacific/Auckland">Auckland</option>
+    </select>
+    <div class="timezone-desc" id="timezoneDesc"></div>
+    <div class="world-clock-face" id="worldClockFace">
+      <div class="clock-center"></div>
+      <div class="hand hour"></div>
+      <div class="hand minute"></div>
+      <div class="hand second"></div>
+      <!-- Números del reloj -->
+      <span class="clock-label" style="left:50%;top:5%;">12</span>
+      <span class="clock-label" style="left:87%;top:20%;">1</span>
+      <span class="clock-label" style="left:97%;top:50%;">3</span>
+      <span class="clock-label" style="left:87%;top:84%;">5</span>
+      <span class="clock-label" style="left:50%;top:94%;">6</span>
+      <span class="clock-label" style="left:13%;top:84%;">7</span>
+      <span class="clock-label" style="left:3%;top:50%;">9</span>
+      <span class="clock-label" style="left:13%;top:20%;">11</span>
+    </div>
+    <div class="digital-time" id="digitalTime"></div>
+    <div class="footer">
+      <b>Angelllll02</b> &mdash; Reloj mundial profesional &copy; 2025<br>
+      <span style="font-size:0.93rem;">
+        <i>Reloj analógico y digital, selector de ciudad, animaciones y diseño elegante.</i>
+      </span>
+    </div>
+  </div>
+  <script>
+    // Ciudades con datos de zona horaria y ejemplo
+    const cities = {
+      "America/Guatemala": {name: "Guatemala", flag:"🇬🇹", tzdesc:"Hora Central de América (GMT-6)"},
+      "America/Mexico_City": {name: "Ciudad de México", flag:"🇲🇽", tzdesc:"Hora Central de México (GMT-6)"},
+      "America/Bogota": {name: "Bogotá", flag:"🇨🇴", tzdesc:"Hora de Colombia (GMT-5)"},
+      "America/Santiago": {name: "Santiago", flag:"🇨🇱", tzdesc:"Hora de Chile (GMT-4)"},
+      "America/Argentina/Buenos_Aires": {name: "Buenos Aires", flag:"🇦🇷", tzdesc:"Hora de Argentina (GMT-3)"},
+      "America/New_York": {name: "Nueva York", flag:"🇺🇸", tzdesc:"Hora del Este de EEUU (GMT-4/-5)"},
+      "America/Los_Angeles": {name: "Los Ángeles", flag:"🇺🇸", tzdesc:"Hora del Pacífico de EEUU (GMT-7/-8)"},
+      "Europe/London": {name: "Londres", flag:"🇬🇧", tzdesc:"Hora de Londres (GMT+1)"},
+      "Europe/Madrid": {name: "Madrid", flag:"🇪🇸", tzdesc:"Hora de España (GMT+2)"},
+      "Europe/Paris": {name: "París", flag:"🇫🇷", tzdesc:"Hora de Francia (GMT+2)"},
+      "Europe/Moscow": {name: "Moscú", flag:"🇷🇺", tzdesc:"Hora de Moscú (GMT+3)"},
+      "Asia/Dubai": {name: "Dubái", flag:"🇦🇪", tzdesc:"Hora de Emiratos Árabes (GMT+4)"},
+      "Asia/Tokyo": {name: "Tokio", flag:"🇯🇵", tzdesc:"Hora de Japón (GMT+9)"},
+      "Asia/Shanghai": {name: "Shanghái", flag:"🇨🇳", tzdesc:"Hora de China (GMT+8)"},
+      "Australia/Sydney": {name: "Sídney", flag:"🇦🇺", tzdesc:"Hora de Australia (GMT+10)"},
+      "Pacific/Auckland": {name: "Auckland", flag:"🇳🇿", tzdesc:"Hora de Nueva Zelanda (GMT+12)"}
+    };
+
+    const citySelect = document.getElementById('citySelect');
+    const digitalTime = document.getElementById('digitalTime');
+    const worldClockFace = document.getElementById('worldClockFace');
+    const timezoneDesc = document.getElementById('timezoneDesc');
+    const hourHand = worldClockFace.querySelector('.hand.hour');
+    const minuteHand = worldClockFace.querySelector('.hand.minute');
+    const secondHand = worldClockFace.querySelector('.hand.second');
+
+    let currentZone = citySelect.value;
+
+    function updateClock() {
+      // Obtener hora local según ciudad
+      const now = new Date();
+      // Intl API para zona horaria
+      const time = new Date(
+        now.toLocaleString("en-US", {timeZone: currentZone})
+      );
+
+      const hour = time.getHours();
+      const minute = time.getMinutes();
+      const second = time.getSeconds();
+
+      // Para reloj analógico
+      const hourAngle = ((hour % 12) + minute / 60) * 30; // 360/12
+      const minuteAngle = (minute + second / 60) * 6; // 360/60
+      const secondAngle = second * 6;
+
+      hourHand.style.transform = `translate(-50%, -100%) rotate(${hourAngle}deg)`;
+      minuteHand.style.transform = `translate(-50%, -100%) rotate(${minuteAngle}deg)`;
+      secondHand.style.transform = `translate(-50%, -100%) rotate(${secondAngle}deg)`;
+
+      // Para reloj digital
+      const pad = n => n.toString().padStart(2, '0');
+      digitalTime.innerHTML = `${pad(hour)}:${pad(minute)}:${pad(second)}`;
+
+      // Zona horaria y bandera
+      let info = cities[currentZone];
+      timezoneDesc.innerHTML = `${info.flag} <b>${info.name}</b> — <span>${info.tzdesc}</span>`;
+    }
+
+    citySelect.onchange = function() {
+      currentZone = this.value;
+      updateClock();
+    };
+
+    // Animación continuo
+    setInterval(updateClock, 950);
+
+    // Inicializar
+    updateClock();
+  </script>
+</body>
+</html>

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Super Penales Futbol</title>
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:700,400|Orbitron&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --verde: #28a745;
+      --azul: #007bff;
+      --rojo: #dc3545;
+      --amarillo: #ffc107;
+      --gris: #f8f9fa;
+      --oscuro: #343a40;
+      --blanco: #fff;
+    }
+    body {
+      margin: 0; padding: 0;
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(120deg, var(--gris), var(--verde) 70%);
+      color: var(--oscuro);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    header {
+      background: linear-gradient(90deg, var(--azul) 60%, var(--verde) 100%);
+      color: var(--blanco);
+      text-align: center;
+      padding: 2rem 1rem 1rem 1rem;
+      box-shadow: 0 2px 14px rgba(40,167,69,0.08);
+    }
+    header h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.7rem;
+      letter-spacing: 2px;
+      margin-bottom: 0.3rem;
+      animation: bounceTitle 2s infinite alternate;
+    }
+    @keyframes bounceTitle {
+      from { transform: scale(1); }
+      to { transform: scale(1.07) rotate(-2deg);}
+    }
+    header p {
+      font-size: 1.1rem;
+      margin-top: 0;
+      letter-spacing: 1px;
+    }
+    .container {
+      max-width: 800px; margin: 2.5rem auto;
+      background: var(--blanco);
+      border-radius: 18px;
+      box-shadow: 0 4px 18px rgba(40,167,69,0.13);
+      padding: 2rem 1.2rem 2.5rem 1.2rem;
+      position: relative;
+    }
+    h2 {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--azul);
+      margin-top: 0;
+      font-size: 1.4rem;
+    }
+    .equipos {
+      display: flex; gap: 2rem; justify-content: center; margin-bottom: 2rem;
+    }
+    .equipo {
+      background: var(--gris);
+      border-radius: 12px;
+      padding: 1rem 2rem;
+      font-weight: bold;
+      color: var(--oscuro);
+      cursor: pointer;
+      transition: background 0.4s, transform 0.3s;
+      box-shadow: 0 2px 8px rgba(0,123,255,0.07);
+    }
+    .equipo.selected {
+      background: var(--azul); color: var(--blanco);
+      transform: scale(1.05);
+      box-shadow: 0 4px 20px rgba(0,123,255,0.15);
+    }
+    .marcador {
+      background: var(--verde);
+      color: var(--blanco);
+      border-radius: 10px;
+      padding: 1rem 1.2rem;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.3rem;
+      text-align: center;
+      margin: 1.3rem 0 1.6rem 0;
+      box-shadow: 0 2px 12px rgba(40,167,69,0.11);
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      align-items: center;
+    }
+    .marcador .nombre {
+      font-size: 1.05rem;
+      background: var(--gris);
+      color: var(--oscuro);
+      border-radius: 7px;
+      padding: 0.3em 1em;
+      margin: 0 0.5em;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+    .marcador .score {
+      font-size: 2.6rem;
+      margin: 0 0.6em;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: bold;
+      color: var(--amarillo);
+      text-shadow: 1px 1px 10px var(--oscuro);
+    }
+    .comentario {
+      margin: 1.2rem 0;
+      background: var(--amarillo);
+      color: var(--oscuro);
+      padding: 0.8em 1em;
+      border-radius: 8px;
+      font-size: 1.05rem;
+      box-shadow: 0 2px 8px rgba(255,193,7,0.15);
+      font-family: 'Montserrat', cursive;
+      min-height: 2em;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+    .juego {
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+    .botones-penal {
+      display: flex; justify-content: center; gap: 2.2rem; margin: 2rem 0;
+    }
+    .boton-penal {
+      background: var(--rojo);
+      color: var(--blanco);
+      border: none; border-radius: 12px;
+      font-size: 1.2rem;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: bold;
+      padding: 1em 2em;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.15s;
+      box-shadow: 0 2px 8px rgba(220,53,69,0.09);
+    }
+    .boton-penal:hover {
+      background: var(--azul);
+      transform: scale(1.07);
+    }
+    .pelota {
+      margin: 2rem auto 1.2rem auto;
+      width: 70px; height: 70px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 60% 40%, var(--gris) 60%, var(--oscuro) 100%);
+      box-shadow: 0 5px 18px rgba(40,167,69,0.20);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.7rem;
+      animation: pelotaMove 1.1s infinite alternate;
+    }
+    @keyframes pelotaMove {
+      from {transform: translateY(0);}
+      to {transform: translateY(-18px);}
+    }
+    .final {
+      background: var(--azul);
+      color: var(--blanco);
+      font-size: 1.4rem;
+      border-radius: 10px;
+      padding: 1rem 2rem;
+      margin-top: 2.5rem;
+      box-shadow: 0 2px 10px rgba(0,123,255,0.13);
+      font-family: 'Orbitron', sans-serif;
+      text-align: center;
+    }
+    @media (max-width: 600px) {
+      .equipos { flex-direction: column; gap: 1rem;}
+      .botones-penal { flex-direction: column; gap: 1rem;}
+      .container { padding: 1rem;}
+      .pelota { width: 50px; height: 50px; font-size: 2rem;}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Super Penales Futbol</h1>
+    <p>¡Elige tu equipo y compite en una tanda épica de penales!</p>
+  </header>
+  <div class="container">
+    <section>
+      <h2>1. Selecciona los Equipos</h2>
+      <div class="equipos">
+        <div class="equipo" id="equipo1" onclick="selectEquipo(1)">Guerreros</div>
+        <div class="equipo" id="equipo2" onclick="selectEquipo(2)">Galácticos</div>
+        <div class="equipo" id="equipo3" onclick="selectEquipo(3)">Volcanes</div>
+        <div class="equipo" id="equipo4" onclick="selectEquipo(4)">Rayos</div>
+      </div>
+      <div style="text-align:center; margin:1rem 0;" id="equiposElegidos"></div>
+    </section>
+    <section>
+      <h2>2. Marcador</h2>
+      <div class="marcador">
+        <span class="nombre" id="nombreA">Equipo A</span>
+        <span class="score" id="scoreA">0</span>
+        <span style="font-size:1.5rem;">⚽</span>
+        <span class="score" id="scoreB">0</span>
+        <span class="nombre" id="nombreB">Equipo B</span>
+      </div>
+      <div class="comentario" id="comentario">¡Esperando a que inicie la tanda de penales!</div>
+    </section>
+    <section class="juego">
+      <h2>3. ¡Juega los Penales!</h2>
+      <div class="pelota">⚽</div>
+      <div class="botones-penal">
+        <button class="boton-penal" onclick="tirarPenal('izquierda')">Izquierda</button>
+        <button class="boton-penal" onclick="tirarPenal('centro')">Centro</button>
+        <button class="boton-penal" onclick="tirarPenal('derecha')">Derecha</button>
+      </div>
+      <div id="turnoActual" style="margin-bottom:1em; font-weight:bold;">
+        Es el turno de: <span id="turnoEquipo">Equipo A</span>
+      </div>
+      <div id="penalesRestantes" style="margin-bottom:1em;">
+        Penales restantes: <span id="penalesRestantesNum">5</span>
+      </div>
+      <div id="finalJuego" class="final" style="display:none;"></div>
+    </section>
+  </div>
+  <footer>
+    Super Penales Futbol &copy; 2025 | ¡Disfruta, reta a tus amigos y conviértete en campeón!
+  </footer>
+  <script>
+    // Equipos
+    let equipos = ["Guerreros", "Galácticos", "Volcanes", "Rayos"];
+    let equipoA = null, equipoB = null;
+    let seleccionando = "A";
+    // Juego
+    let scoreA = 0, scoreB = 0;
+    let penales = 5;
+    let turno = "A"; // "A" o "B"
+    let penalesActuales = penales;
+    let comentariosGol = [
+      "¡GOOOOOOLAZO! El arquero ni la vio.",
+      "¡Gol! Qué clase de tiro.",
+      "¡Imparable! El balón besa la red.",
+      "¡Celebración total! Gol para el recuerdo.",
+      "¡Qué tiro! El portero quedó parado.",
+      "¡La afición estalla de alegría!"
+    ];
+    let comentariosFallo = [
+      "¡Falló! El balón rozó el poste.",
+      "¡Lo atajó el portero! Qué reflejos.",
+      "¡Se fue por encima! Increíble.",
+      "¡El arquero adivinó el lado!",
+      "La presión pudo más. Sin gol.",
+      "¡Oh no! Oportunidad desperdiciada."
+    ];
+
+    function selectEquipo(num) {
+      if (!equipoA) {
+        equipoA = equipos[num - 1];
+        document.getElementById("equipo" + num).classList.add("selected");
+        seleccionando = "B";
+        document.getElementById("equiposElegidos").innerHTML = `Equipo A: <b>${equipoA}</b><br>Selecciona el rival`;
+      } else if (!equipoB && equipos[num - 1] !== equipoA) {
+        equipoB = equipos[num - 1];
+        document.getElementById("equipo" + num).classList.add("selected");
+        document.getElementById("equiposElegidos").innerHTML = `Equipo A: <b>${equipoA}</b> vs Equipo B: <b>${equipoB}</b>`;
+        iniciarJuego();
+      }
+    }
+
+    function iniciarJuego() {
+      document.getElementById("nombreA").textContent = equipoA;
+      document.getElementById("nombreB").textContent = equipoB;
+      document.getElementById("turnoEquipo").textContent = equipoA;
+      document.getElementById("comentario").textContent = "¡Comienza la tanda de penales! Tira el primer penal.";
+    }
+
+    function tirarPenal(lado) {
+      if (!equipoA || !equipoB || penalesActuales <= 0) return;
+
+      let gol = Math.random() < 0.67 ? true : false; // 67% probabilidad de gol
+      let mensaje = "";
+      if (gol) {
+        mensaje = comentariosGol[Math.floor(Math.random() * comentariosGol.length)];
+        if (turno === "A") scoreA++; else scoreB++;
+      } else {
+        mensaje = comentariosFallo[Math.floor(Math.random() * comentariosFallo.length)];
+      }
+
+      // Animación rápida de pelota
+      let pelota = document.querySelector('.pelota');
+      pelota.style.transition = "transform 0.25s";
+      pelota.style.transform = "translateX(" + (lado === "izquierda" ? "-80px" : lado === "derecha" ? "80px" : "0") + ") scale(1.2)";
+      setTimeout(() => {
+        pelota.style.transform = "";
+      }, 280);
+
+      // Actualiza marcador
+      document.getElementById("scoreA").textContent = scoreA;
+      document.getElementById("scoreB").textContent = scoreB;
+
+      // Comentario animado
+      let comentarioDiv = document.getElementById("comentario");
+      comentarioDiv.textContent = mensaje;
+      comentarioDiv.style.opacity = "0.5";
+      setTimeout(() => { comentarioDiv.style.opacity = "1"; }, 350);
+
+      // Siguiente turno
+      penalesActuales--;
+      document.getElementById("penalesRestantesNum").textContent = penalesActuales;
+      if (penalesActuales > 0) {
+        turno = turno === "A" ? "B" : "A";
+        document.getElementById("turnoEquipo").textContent = turno === "A" ? equipoA : equipoB;
+      } else {
+        terminarJuego();
+      }
+    }
+
+    function terminarJuego() {
+      let finalDiv = document.getElementById("finalJuego");
+      if (scoreA > scoreB) {
+        finalDiv.textContent = `¡${equipoA} es el campeón! 🏆 (${scoreA} - ${scoreB})`;
+      } else if (scoreB > scoreA) {
+        finalDiv.textContent = `¡${equipoB} gana la tanda! 🏆 (${scoreB} - ${scoreA})`;
+      } else {
+        finalDiv.textContent = `¡Empate! ⚽ (${scoreA} - ${scoreB})`;
+      }
+      finalDiv.style.display = "block";
+      document.getElementById("comentario").textContent = "¡Fin del juego! Refresca para jugar otra vez.";
+    }
+  </script>
+</body>
+</html>

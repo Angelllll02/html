@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Calendario Súper Elaborado y Bonito</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:700,400|Pacifico&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --azul: #2979ff;
+      --rosa: #ff6f91;
+      --verde: #36c37d;
+      --amarillo: #ffe066;
+      --gris: #f7f7f7;
+      --morado: #8f7ada;
+      --oscuro: #222;
+    }
+    body {
+      margin: 0; padding: 0;
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, var(--gris) 70%, var(--azul) 100%);
+      min-height: 100vh;
+      color: var(--oscuro);
+      overflow-x: hidden;
+    }
+    header {
+      text-align: center;
+      padding: 2rem 1rem 1rem 1rem;
+      background: linear-gradient(90deg, var(--azul), var(--rosa) 100%);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(41,121,255,0.10);
+    }
+    header h1 {
+      font-family: 'Pacifico', cursive;
+      font-size: 3rem;
+      letter-spacing: 2px;
+      margin-bottom: 0.5rem;
+      animation: floatTitle 2s infinite alternate;
+    }
+    @keyframes floatTitle {
+      from { transform: translateY(0);}
+      to { transform: translateY(-12px);}
+    }
+    .container {
+      max-width: 680px;
+      margin: 2rem auto;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 4px 22px rgba(41,121,255,0.13);
+      padding: 2.2rem 1rem 2rem 1rem;
+      position: relative;
+    }
+    .calendar-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding: 0 1rem;
+    }
+    .calendar-controls button {
+      background: var(--rosa);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: bold;
+      padding: .6em 1.5em;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.15s;
+      box-shadow: 0 2px 8px rgba(255,111,145,0.09);
+    }
+    .calendar-controls button:hover {
+      background: var(--azul);
+      transform: scale(1.07);
+    }
+    .calendar-controls .month-year {
+      font-size: 1.5rem;
+      font-family: 'Pacifico', cursive;
+      color: var(--azul);
+      letter-spacing: 1px;
+    }
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      padding: 1rem;
+      background: var(--gris);
+      border-radius: 14px;
+      box-shadow: 0 2px 10px rgba(41,121,255,0.08);
+      margin-bottom: 1.5rem;
+    }
+    .calendar-grid .day-name {
+      color: var(--morado);
+      font-weight: bold;
+      text-align: center;
+      padding-bottom: 6px;
+      font-size: 1.07rem;
+      background: var(--gris);
+    }
+    .calendar-grid .day {
+      background: #fff;
+      border-radius: 12px;
+      min-height: 55px;
+      text-align: right;
+      padding: 7px 9px;
+      font-size: 1.09rem;
+      position: relative;
+      box-shadow: 0 2px 8px rgba(41,121,255,0.05);
+      transition: background 0.2s, transform 0.2s;
+      cursor: pointer;
+    }
+    .calendar-grid .day.today {
+      background: var(--amarillo);
+      color: var(--oscuro);
+      font-weight: bold;
+      border: 2px solid var(--azul);
+      box-shadow: 0 4px 18px rgba(255,224,102,0.13);
+      transform: scale(1.08);
+      z-index: 1;
+    }
+    .calendar-grid .day.has-event {
+      background: var(--verde);
+      color: #fff;
+      font-weight: bold;
+      border: 2px solid var(--rosa);
+      box-shadow: 0 2px 12px rgba(54,195,125,0.13);
+      position: relative;
+    }
+    .calendar-grid .day .event-dot {
+      position: absolute;
+      left: 7px;
+      top: 9px;
+      width: 9px;
+      height: 9px;
+      background: var(--rosa);
+      border-radius: 50%;
+      box-shadow: 0 1px 4px #ff6f9140;
+    }
+    .event-list {
+      background: var(--gris);
+      border-radius: 14px;
+      padding: 1.5em 1em;
+      box-shadow: 0 2px 10px rgba(41,121,255,0.10);
+      margin-bottom: 1.5rem;
+      min-height: 60px;
+    }
+    .event-list h2 {
+      font-family: 'Pacifico', cursive;
+      color: var(--rosa);
+      font-size: 1.25rem;
+      margin-bottom: .5em;
+      margin-top: 0;
+    }
+    .event-list ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      color: var(--azul);
+      font-size: 1.07rem;
+    }
+    .event-list li {
+      margin-bottom: .6em;
+      padding: .4em .7em;
+      background: #fff;
+      border-radius: 7px;
+      box-shadow: 0 1px 6px #2979ff10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .event-list .remove-btn {
+      background: var(--rojo, #ef5350);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: .95em;
+      padding: .2em .7em;
+      cursor: pointer;
+      margin-left: 1em;
+    }
+    .add-event-form {
+      display: flex;
+      gap: 1em;
+      align-items: center;
+      margin-top: 1.2em;
+    }
+    .add-event-form input {
+      font-size: 1.07rem;
+      padding: .4em .7em;
+      border-radius: 8px;
+      border: 1px solid var(--azul);
+      background: #fff;
+      font-family: 'Montserrat', sans-serif;
+      width: 60%;
+    }
+    .add-event-form button {
+      background: var(--verde);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.05rem;
+      font-weight: bold;
+      padding: .45em 1.1em;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.13s;
+      box-shadow: 0 2px 8px rgba(54,195,125,0.09);
+    }
+    .add-event-form button:hover {
+      background: var(--azul);
+      transform: scale(1.07);
+    }
+    footer {
+      background: var(--azul);
+      color: #fff;
+      text-align: center;
+      padding: 1.2rem 0;
+      margin-top: 2rem;
+      font-size: 1rem;
+      letter-spacing: 1px;
+      border-radius: 0 0 16px 16px;
+      box-shadow: 0 -2px 10px rgba(41,121,255,0.09);
+    }
+    @media (max-width: 700px) {
+      .container { padding: .7em;}
+      .calendar-grid { gap: 5px; padding: .5em;}
+      .calendar-grid .day { min-height: 38px; font-size: .97rem;}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Calendario Súper Elaborado</h1>
+    <p>Organiza tus días, agrega tus eventos y disfruta de un calendario visual.</p>
+  </header>
+  <div class="container">
+    <div class="calendar-controls">
+      <button onclick="prevMonth()">&#8592; Mes anterior</button>
+      <span class="month-year" id="monthYear"></span>
+      <button onclick="nextMonth()">Mes siguiente &#8594;</button>
+    </div>
+    <div class="calendar-grid" id="calendarGrid"></div>
+    <div class="event-list" id="eventList">
+      <h2>Eventos del día</h2>
+      <ul id="eventsUl"></ul>
+      <form class="add-event-form" onsubmit="addEvent(event)">
+        <input type="text" id="eventInput" placeholder="Agregar evento..." required>
+        <button type="submit">Agregar</button>
+      </form>
+    </div>
+  </div>
+  <footer>
+    Calendario Bonito &copy; 2025 | Productividad y estilo en cada día
+  </footer>
+  <script>
+    // Utilidades de fecha
+    let now = new Date();
+    let currentMonth = now.getMonth();
+    let currentYear = now.getFullYear();
+    let selectedDay = now.getDate();
+    let selectedMonth = currentMonth;
+    let selectedYear = currentYear;
+    let monthsES = [
+      "Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio",
+      "Agosto","Septiembre","Octubre","Noviembre","Diciembre"
+    ];
+    let daysES = ["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"];
+
+    // Eventos guardados (localStorage)
+    let events = JSON.parse(localStorage.getItem("calendarEvents") || "{}");
+
+    function saveEvents() {
+      localStorage.setItem("calendarEvents", JSON.stringify(events));
+    }
+
+    function renderCalendar() {
+      let firstDay = new Date(currentYear, currentMonth, 1).getDay();
+      let daysInMonth = new Date(currentYear, currentMonth+1, 0).getDate();
+
+      document.getElementById("monthYear").textContent = `${monthsES[currentMonth]} ${currentYear}`;
+
+      let grid = document.getElementById("calendarGrid");
+      grid.innerHTML = "";
+
+      // Nombres de días
+      for (let d of daysES) {
+        let div = document.createElement("div");
+        div.className = "day-name";
+        div.textContent = d;
+        grid.appendChild(div);
+      }
+
+      // Días en blanco antes del primer día
+      for (let i = 0; i < firstDay; i++) {
+        let blank = document.createElement("div");
+        blank.className = "day";
+        blank.style.visibility = "hidden";
+        grid.appendChild(blank);
+      }
+
+      // Días del mes
+      for (let day = 1; day <= daysInMonth; day++) {
+        let dayDiv = document.createElement("div");
+        dayDiv.className = "day";
+        dayDiv.textContent = day;
+
+        let evKey = `${currentYear}-${currentMonth+1}-${day}`;
+        if (events[evKey] && events[evKey].length) {
+          dayDiv.classList.add("has-event");
+          let dot = document.createElement("span");
+          dot.className = "event-dot";
+          dayDiv.appendChild(dot);
+        }
+
+        let today = new Date();
+        if (
+          day === today.getDate() &&
+          currentMonth === today.getMonth() &&
+          currentYear === today.getFullYear()
+        ) {
+          dayDiv.classList.add("today");
+        }
+
+        if (
+          day === selectedDay &&
+          currentMonth === selectedMonth &&
+          currentYear === selectedYear
+        ) {
+          dayDiv.style.outline = "3px solid var(--morado)";
+        }
+
+        dayDiv.onclick = function() {
+          selectedDay = day;
+          selectedMonth = currentMonth;
+          selectedYear = currentYear;
+          renderCalendar();
+          renderEvents();
+        };
+        grid.appendChild(dayDiv);
+      }
+      renderEvents();
+    }
+
+    function renderEvents() {
+      let evKey = `${selectedYear}-${selectedMonth+1}-${selectedDay}`;
+      let ul = document.getElementById("eventsUl");
+      ul.innerHTML = "";
+      let todaysEvents = events[evKey] || [];
+      if (todaysEvents.length === 0) {
+        let li = document.createElement("li");
+        li.textContent = "No hay eventos para este día.";
+        ul.appendChild(li);
+      } else {
+        todaysEvents.forEach((ev, i) => {
+          let li = document.createElement("li");
+          li.textContent = ev;
+          let rmBtn = document.createElement("button");
+          rmBtn.className = "remove-btn";
+          rmBtn.textContent = "Eliminar";
+          rmBtn.onclick = function() {
+            events[evKey].splice(i,1);
+            if (events[evKey].length === 0) delete events[evKey];
+            saveEvents();
+            renderCalendar();
+            renderEvents();
+          };
+          li.appendChild(rmBtn);
+          ul.appendChild(li);
+        });
+      }
+      document.getElementById("eventInput").value = "";
+    }
+
+    function prevMonth() {
+      currentMonth--;
+      if (currentMonth < 0) {
+        currentMonth = 11;
+        currentYear--;
+      }
+      selectedDay = 1;
+      selectedMonth = currentMonth;
+      selectedYear = currentYear;
+      renderCalendar();
+    }
+    function nextMonth() {
+      currentMonth++;
+      if (currentMonth > 11) {
+        currentMonth = 0;
+        currentYear++;
+      }
+      selectedDay = 1;
+      selectedMonth = currentMonth;
+      selectedYear = currentYear;
+      renderCalendar();
+    }
+
+    function addEvent(e) {
+      e.preventDefault();
+      let text = document.getElementById("eventInput").value.trim();
+      if (!text) return;
+      let evKey = `${selectedYear}-${selectedMonth+1}-${selectedDay}`;
+      if (!events[evKey]) events[evKey] = [];
+      events[evKey].push(text);
+      saveEvents();
+      renderCalendar();
+      renderEvents();
+    }
+
+    // Inicialización
+    renderCalendar();
+  </script>
+</body>
+</html>

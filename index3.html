@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Lugares Turísticos de Guatemala</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --main-bg: linear-gradient(120deg, #43cea2 0%, #185a9d 100%);
+      --card-bg: rgba(255,255,255,0.97);
+      --accent: #e67e22;
+      --accent2: #27ae60;
+      --accent3: #8e44ad;
+      --shadow: 0 8px 36px rgba(52, 73, 94, 0.11);
+      --font: 'Segoe UI', Arial, sans-serif;
+      --border-radius: 20px;
+    }
+    body {
+      background: var(--main-bg);
+      min-height: 100vh;
+      margin: 0;
+      font-family: var(--font);
+      color: #222;
+    }
+    .container {
+      max-width: 960px;
+      margin: 32px auto;
+      background: rgba(255,255,255,0.14);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      padding: 30px 36px 30px 36px;
+      backdrop-filter: blur(2px);
+    }
+    h1 {
+      text-align: center;
+      font-size: 2.7rem;
+      color: var(--accent2);
+      margin-top: 0;
+      letter-spacing: 2px;
+      text-shadow: 0 2px 10px #27ae6022;
+    }
+    .intro {
+      font-size: 1.21rem;
+      text-align: center;
+      margin-bottom: 22px;
+      background: rgba(255,255,255,0.20);
+      padding: 18px;
+      border-radius: 13px;
+      box-shadow: 0 2px 14px #185a9d33;
+      color: #222;
+    }
+    .wonders-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 28px;
+      margin-bottom: 24px;
+    }
+    .wonder-card {
+      background: var(--card-bg);
+      border-radius: 17px;
+      box-shadow: 0 2px 14px #e67e2222;
+      padding: 22px 17px;
+      transition: transform 0.18s, box-shadow 0.18s;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      border: 2px solid #eee;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 150px;
+    }
+    .wonder-card:hover {
+      transform: scale(1.04);
+      box-shadow: 0 6px 32px #27ae6033;
+      border-color: var(--accent2);
+      background: #f9f5ff;
+    }
+    .wonder-title {
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: var(--accent3);
+      margin-bottom: 6px;
+      text-align: center;
+    }
+    .wonder-desc {
+      font-size: 1.07rem;
+      color: #333;
+      text-align: center;
+      margin-bottom: 7px;
+    }
+    .wonder-btn {
+      background: var(--accent2);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 22px;
+      margin-top: 4px;
+      font-size: 1.07rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.17s;
+      box-shadow: 0 2px 14px #27ae6033;
+    }
+    .wonder-btn:hover {
+      background: var(--accent3);
+    }
+    .details-modal {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(44, 62, 80, 0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    .details-modal.active {
+      display: flex;
+      animation: modalIn 0.3s;
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.95);}
+      to { opacity: 1; transform: scale(1);}
+    }
+    .modal-content {
+      background: #fff;
+      border-radius: 25px;
+      box-shadow: 0 10px 36px #8e44ad66;
+      max-width: 420px;
+      width: 98vw;
+      padding: 34px 23px 20px 23px;
+      text-align: center;
+      position: relative;
+      color: #222;
+      animation: fadeIn 0.2s;
+    }
+    .modal-title {
+      font-size: 1.53rem;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: var(--accent3);
+    }
+    .modal-desc {
+      font-size: 1.09rem;
+      margin-bottom: 15px;
+      color: #222;
+    }
+    .modal-coords {
+      font-size: 0.99rem;
+      color: var(--accent3);
+      margin-bottom: 10px;
+    }
+    .close-btn {
+      position: absolute;
+      top: 12px;
+      right: 17px;
+      background: var(--accent3);
+      border: none;
+      color: #fff;
+      font-size: 1.23rem;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      cursor: pointer;
+      transition: background 0.17s;
+      z-index: 20;
+    }
+    .close-btn:hover {
+      background: var(--accent2);
+    }
+    .curiosity {
+      background: #dff9fb;
+      color: #34495e;
+      border-radius: 9px;
+      margin: 14px 0 5px 0;
+      padding: 10px 12px;
+      font-size: 1.02rem;
+      font-style: italic;
+      box-shadow: 0 1px 8px #2980b922;
+    }
+    .footer {
+      text-align: center;
+      font-size: 0.97rem;
+      color: #8e44ad;
+      margin-top: 18px;
+      opacity: 0.8;
+      padding-bottom: 10px;
+    }
+    @media (max-width: 700px) {
+      .container {
+        padding: 12px 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>✨ Lugares Turísticos de Guatemala ✨</h1>
+    <div class="intro">
+      Descubre los <b>destinos turísticos más emblemáticos de Guatemala</b>.<br>
+      Haz clic en <b>Ver más</b> para cada lugar y conoce su historia, curiosidades y datos únicos.<br>
+      ¡Explora, aprende y sorpréndete!
+    </div>
+    <div class="wonders-list" id="wondersList"></div>
+    <div class="footer">
+      Creación original con ❤️ y creatividad por <span style="color:var(--accent2);font-weight:600;">Copilot</span> — 2025
+    </div>
+  </div>
+  <!-- Modal para detalles -->
+  <div class="details-modal" id="detailsModal">
+    <div class="modal-content" id="modalContent"></div>
+  </div>
+  <script>
+    // Lugares turísticos de Guatemala con curiosidades
+    const wonders = [
+      {
+        name: "Antigua Guatemala",
+        desc: "Ciudad colonial rodeada de volcanes, famosa por su arquitectura, historia y procesiones de Semana Santa.",
+        lat: 14.5595,
+        lng: -90.7296,
+        curiosity: "Antigua fue la capital de Guatemala hasta 1776 y es Patrimonio Cultural de la Humanidad por la UNESCO."
+      },
+      {
+        name: "Lago de Atitlán",
+        desc: "Considerado uno de los lagos más bellos del mundo, rodeado por tres volcanes y pueblos indígenas coloridos.",
+        lat: 14.6869,
+        lng: -91.2060,
+        curiosity: "El lago se formó en un enorme cráter volcánico y sus aguas pueden cambiar de color según el clima."
+      },
+      {
+        name: "Tikal",
+        desc: "La mayor ciudad maya conocida, ubicada en la selva de Petén. Destacan sus enormes pirámides y templos.",
+        lat: 17.2220,
+        lng: -89.6237,
+        curiosity: "El Templo IV de Tikal es la estructura prehispánica más alta de América, con 70 metros."
+      },
+      {
+        name: "Semuc Champey",
+        desc: "Un paraíso natural con pozas de agua turquesa sobre un puente de piedra caliza, rodeado de selva.",
+        lat: 15.5351,
+        lng: -89.9636,
+        curiosity: "El río Cahabón pasa debajo de las pozas de Semuc Champey, creando una vista espectacular."
+      },
+      {
+        name: "Castillo de San Felipe de Lara",
+        desc: "Fortaleza ubicada en Izabal, construida para defenderse de piratas en el siglo XVII.",
+        lat: 15.5336,
+        lng: -89.0012,
+        curiosity: "El castillo fue restaurado y ahora es un museo abierto al público a orillas del lago Izabal."
+      },
+      {
+        name: "Volcán Pacaya",
+        desc: "Uno de los volcanes más activos de Centroamérica, famoso por sus vistas y caminatas sobre lava solidificada.",
+        lat: 14.3818,
+        lng: -90.6010,
+        curiosity: "Puedes asar malvaviscos sobre la lava caliente en algunos recorridos guiados."
+      },
+      {
+        name: "Livingston",
+        desc: "Pueblo caribeño accesible solo por barco, conocido por su cultura Garífuna, playas y gastronomía.",
+        lat: 15.8303,
+        lng: -88.7500,
+        curiosity: "En Livingston puedes probar el tradicional 'tapado', un caldo de mariscos y plátano."
+      },
+      {
+        name: "Quetzaltenango (Xela)",
+        desc: "Segunda ciudad más grande del país, rodeada de montañas y volcanes, centro de cultura y educación.",
+        lat: 14.8348,
+        lng: -91.5187,
+        curiosity: "Xela es famosa por sus aguas termales naturales y la arquitectura neoclásica de su parque central."
+      },
+      {
+        name: "Flores",
+        desc: "Pintoresco pueblo en una isla del lago Petén Itzá, puerta de entrada a Tikal y otros sitios arqueológicos.",
+        lat: 16.9291,
+        lng: -89.8923,
+        curiosity: "Flores fue uno de los últimos bastiones mayas en resistir la conquista española."
+      },
+      {
+        name: "Cerro de la Cruz",
+        desc: "Mirador emblemático de Antigua Guatemala, ofrece vistas espectaculares de la ciudad y el volcán de Agua.",
+        lat: 14.5702,
+        lng: -90.7303,
+        curiosity: "Es uno de los lugares favoritos para tomar fotografías panorámicas de Antigua Guatemala."
+      }
+    ];
+    // Renderizar tarjetas
+    function renderWonders() {
+      const list = document.getElementById('wondersList');
+      list.innerHTML = '';
+      wonders.forEach((wonder, idx) => {
+        const card = document.createElement('div');
+        card.className = 'wonder-card';
+        card.innerHTML = `
+          <div class="wonder-title">${wonder.name}</div>
+          <div class="wonder-desc">${wonder.desc}</div>
+          <button class="wonder-btn" onclick="showModal(${idx})">Ver más</button>
+        `;
+        list.appendChild(card);
+      });
+    }
+    // Modal
+    function showModal(idx) {
+      const modal = document.getElementById('detailsModal');
+      const content = document.getElementById('modalContent');
+      const wonder = wonders[idx];
+      content.innerHTML = `
+        <button class="close-btn" onclick="document.getElementById('detailsModal').classList.remove('active')">&times;</button>
+        <div class="modal-title">${wonder.name}</div>
+        <div class="modal-desc">${wonder.desc}</div>
+        <div class="modal-coords">Coordenadas: ${wonder.lat.toFixed(4)}, ${wonder.lng.toFixed(4)}</div>
+        <div class="curiosity">Curiosidad: ${wonder.curiosity}</div>
+      `;
+      modal.classList.add('active');
+    }
+    document.getElementById('detailsModal').onclick = (e) => {
+      if (e.target.id === 'detailsModal') e.target.classList.remove('active');
+    };
+    // Inicializar
+    window.addEventListener('DOMContentLoaded', renderWonders);
+  </script>
+</body>
+</html>

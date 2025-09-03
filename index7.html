@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculadora de IMC Profesional</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Calculadora avanzada de IMC - Índice de Masa Corporal. Resultados detallados, tablas, historial y consejos personalizados.">
+  <style>
+    :root {
+      --main-bg: linear-gradient(120deg, #56cc9d 0%, #2896d3 100%);
+      --panel-bg: #fff;
+      --accent: #2980b9;
+      --accent2: #43cea2;
+      --danger: #e74c3c;
+      --warning: #f9ca24;
+      --success: #27ae60;
+      --font: 'Segoe UI', Arial, sans-serif;
+      --radius: 22px;
+      --shadow: 0 10px 40px rgba(44, 62, 80, 0.14);
+    }
+    body {
+      background: var(--main-bg);
+      font-family: var(--font);
+      color: #222;
+      margin: 0;
+      min-height: 100vh;
+      transition: background 0.3s;
+    }
+    .container {
+      max-width: 430px;
+      margin: 40px auto;
+      background: var(--panel-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 30px 28px 26px 28px;
+      border: 2px solid var(--accent);
+      position: relative;
+    }
+    h1 {
+      text-align: center;
+      font-size: 2.4rem;
+      margin-top: 0;
+      color: var(--accent);
+      letter-spacing: 1.5px;
+      text-shadow: 0 2px 8px #2980b933;
+    }
+    .subtitle {
+      text-align: center;
+      font-size: 1.14rem;
+      margin-bottom: 18px;
+      color: #2896d3;
+      font-weight: 500;
+      letter-spacing: 0.7px;
+    }
+    .imc-form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 18px;
+    }
+    .input-group {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      background: #f6f7fb;
+      border-radius: 10px;
+      padding: 9px 14px;
+      border: 1.5px solid #e6eaf0;
+    }
+    .input-group label {
+      flex: 1 1 60px;
+      font-weight: 500;
+      color: #2896d3;
+    }
+    .input-group input, .input-group select {
+      flex: 2 1 90px;
+      padding: 8px 9px;
+      border-radius: 7px;
+      border: 1.5px solid #b3d3e9;
+      font-size: 1.08rem;
+      font-family: inherit;
+      outline: none;
+      background: #f8fbff;
+      color: #222;
+      transition: border-color 0.2s;
+    }
+    .input-group input:focus, .input-group select:focus {
+      border-color: var(--accent);
+    }
+    .imc-btn {
+      background: var(--accent2);
+      color: #fff;
+      font-size: 1.17rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 0;
+      margin-top: 7px;
+      cursor: pointer;
+      box-shadow: 0 2px 16px #43cea222;
+      letter-spacing: 1px;
+      transition: background 0.22s;
+    }
+    .imc-btn:hover {
+      background: var(--accent);
+    }
+    .result-section {
+      margin-top: 12px;
+      margin-bottom: 18px;
+      background: #f6f6fa;
+      border-radius: 15px;
+      box-shadow: 0 2px 14px #43cea211;
+      padding: 18px 16px;
+      font-size: 1.12rem;
+      color: #222;
+    }
+    .imc-value {
+      font-size: 2.2rem;
+      font-weight: bold;
+      color: var(--accent);
+      text-shadow: 0 2px 8px #56cc9d33;
+      margin-bottom: 4px;
+      display: block;
+    }
+    .imc-category {
+      font-size: 1.18rem;
+      font-weight: 600;
+      padding: 6px 13px;
+      border-radius: 9px;
+      margin-bottom: 7px;
+      display: inline-block;
+      background: #eaf6fb;
+      color: #27ae60;
+    }
+    .imc-category.under { background: #f9e8e8; color: var(--danger);}
+    .imc-category.normal { background: #eaf6fb; color: var(--success);}
+    .imc-category.over { background: #fff8e1; color: var(--warning);}
+    .imc-category.obese { background: #ffeaea; color: var(--danger);}
+    .advice {
+      font-size: 1.04rem;
+      margin-top: 4px;
+      color: #34495e;
+      font-style: italic;
+      background: #eaf6fb;
+      border-radius: 8px;
+      padding: 8px 13px;
+      margin-bottom: 5px;
+    }
+    .history-section {
+      background: #edf9f4;
+      color: #222;
+      border-radius: 14px;
+      padding: 16px 12px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 10px #43cea213;
+    }
+    .history-title {
+      color: var(--accent3);
+      font-size: 1.12rem;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+    .history-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-size: 1.01rem;
+    }
+    .history-list li {
+      margin-bottom: 4px;
+      background: #f8fbff;
+      border-radius: 7px;
+      padding: 6px 8px;
+      transition: background 0.13s;
+      cursor: pointer;
+      overflow: auto;
+    }
+    .history-list li:hover {
+      background: #dfecf8;
+    }
+    .clear-history-btn {
+      background: var(--danger);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 5px 14px;
+      font-size: 0.99rem;
+      cursor: pointer;
+      float: right;
+      margin-top: 2px;
+    }
+    .imc-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0 7px 0;
+      font-size: 0.98rem;
+      background: #f7f7ff;
+      border-radius: 9px;
+      box-shadow: 0 2px 8px #2896d322;
+      overflow: hidden;
+    }
+    .imc-table th, .imc-table td {
+      border: 1px solid #e1e4ea;
+      padding: 7px 11px;
+      text-align: center;
+    }
+    .imc-table th {
+      background: #43cea2;
+      color: #fff;
+      font-weight: 600;
+    }
+    .imc-table tr:nth-child(even) td {
+      background: #f2faf7;
+    }
+    .imc-table tr:nth-child(odd) td {
+      background: #eaf6fb;
+    }
+    .imc-table .table-under { color: var(--danger); font-weight: 600;}
+    .imc-table .table-normal { color: var(--success); font-weight: 600;}
+    .imc-table .table-over { color: var(--warning); font-weight: 600;}
+    .imc-table .table-obese { color: var(--danger); font-weight: 600;}
+    .unit-toggle {
+      float: right;
+      font-size: 1.04rem;
+      background: var(--accent2);
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      padding: 5px 16px;
+      cursor: pointer;
+      margin-bottom: 7px;
+      margin-top: 2px;
+      transition: background 0.2s;
+    }
+    .unit-toggle:hover {
+      background: var(--accent);
+    }
+    .footer {
+      text-align: center;
+      font-size: 0.97rem;
+      margin-top: 8px;
+      color: #2896d3;
+      opacity: 0.8;
+      padding-bottom: 10px;
+      letter-spacing: 1px;
+    }
+    @media (max-width: 600px) {
+      .container { padding: 12px 3px; }
+      .imc-table th, .imc-table td { padding: 4px 3px; font-size: 0.92rem;}
+      h1 { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <button class="unit-toggle" id="unitBtn">Cambiar a US/Imperial</button>
+    <h1>Calculadora de IMC</h1>
+    <div class="subtitle">Índice de Masa Corporal - Resultados detallados y consejos personalizados</div>
+    <form class="imc-form" id="imcForm" autocomplete="off">
+      <div class="input-group">
+        <label for="name">Nombre</label>
+        <input id="name" type="text" placeholder="Opcional" maxlength="30">
+      </div>
+      <div class="input-group">
+        <label for="age">Edad</label>
+        <input id="age" type="number" min="1" max="120" step="1" placeholder="Años">
+      </div>
+      <div class="input-group">
+        <label for="gender">Sexo</label>
+        <select id="gender">
+          <option value="">Selecciona</option>
+          <option value="m">Masculino</option>
+          <option value="f">Femenino</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label for="height">Estatura</label>
+        <input id="height" type="number" min="0.5" max="2.5" step="0.01" placeholder="Ej: 1.70">
+        <span id="heightUnit">m</span>
+      </div>
+      <div class="input-group">
+        <label for="weight">Peso</label>
+        <input id="weight" type="number" min="20" max="300" step="0.1" placeholder="Ej: 68.5">
+        <span id="weightUnit">kg</span>
+      </div>
+      <button class="imc-btn" type="submit">Calcular IMC</button>
+    </form>
+    <div class="result-section" id="resultSection" style="display:none;">
+      <span class="imc-value" id="imcValue"></span>
+      <span class="imc-category" id="imcCategory"></span>
+      <div class="advice" id="imcAdvice"></div>
+      <div id="extraInfo"></div>
+    </div>
+    <div class="history-section" id="historySection">
+      <div class="history-title">Historial (<span id="historyCount">0</span>) <button class="clear-history-btn" id="clearHistoryBtn">Borrar</button></div>
+      <ul class="history-list" id="historyList"></ul>
+    </div>
+    <div style="margin:12px 0 10px 0;">
+      <table class="imc-table">
+        <tr>
+          <th>Categoría</th>
+          <th>IMC (adultos)</th>
+        </tr>
+        <tr>
+          <td class="table-under">Bajo peso</td>
+          <td>&lt; 18.5</td>
+        </tr>
+        <tr>
+          <td class="table-normal">Peso normal</td>
+          <td>18.5 - 24.9</td>
+        </tr>
+        <tr>
+          <td class="table-over">Sobrepeso</td>
+          <td>25.0 - 29.9</td>
+        </tr>
+        <tr>
+          <td class="table-obese">Obesidad</td>
+          <td>&ge; 30.0</td>
+        </tr>
+      </table>
+    </div>
+    <div class="footer">
+      <b>Angelllll02</b> &mdash; Calculadora profesional IMC &copy; 2025<br>
+      <span style="font-size:0.93rem;">
+        <i>Incluye historial, tabla de referencia, unidad internacional e imperial, consejos personalizados y datos adicionales.</i>
+      </span>
+    </div>
+  </div>
+  <script>
+    // Elementos
+    const imcForm = document.getElementById("imcForm");
+    const resultSection = document.getElementById("resultSection");
+    const imcValue = document.getElementById("imcValue");
+    const imcCategory = document.getElementById("imcCategory");
+    const imcAdvice = document.getElementById("imcAdvice");
+    const extraInfo = document.getElementById("extraInfo");
+    const historyList = document.getElementById("historyList");
+    const historyCount = document.getElementById("historyCount");
+    const clearHistoryBtn = document.getElementById("clearHistoryBtn");
+    const unitBtn = document.getElementById("unitBtn");
+    const heightUnit = document.getElementById("heightUnit");
+    const weightUnit = document.getElementById("weightUnit");
+
+    // Estado
+    let metric = true;
+    let history = [];
+
+    // Consejos personalizados
+    function getAdvice(cat, age, gender) {
+      if (cat === "Bajo peso") {
+        return "Te recomendamos consultar con un nutricionista para valorar tu salud corporal y alimentación. Mantener un peso adecuado es vital para la salud.";
+      }
+      if (cat === "Peso normal") {
+        if (age < 18) return "¡Sigue creciendo saludable! Mantén buenos hábitos de alimentación y ejercicio.";
+        if (age > 60) return "¡Excelente! Consulta regularmente con tu médico y mantén una dieta equilibrada.";
+        return "¡Felicitaciones! Mantén tu estilo de vida activo y saludable.";
+      }
+      if (cat === "Sobrepeso") {
+        return "Te sugerimos cuidar tu alimentación y aumentar tu actividad física. Pequeños cambios pueden mejorar tu bienestar.";
+      }
+      if (cat === "Obesidad") {
+        return "Consulta con un profesional de salud para recibir orientación. La obesidad aumenta el riesgo de enfermedades crónicas.";
+      }
+      return "Consulta con un profesional de salud para recibir orientación personalizada.";
+    }
+
+    // Cálculo de IMC
+    function calcularIMC(peso, altura, metric) {
+      if (metric) {
+        // Altura en metros, peso en kg
+        return peso / (altura * altura);
+      } else {
+        // Altura en pulgadas, peso en libras
+        return (peso / (altura * altura)) * 703;
+      }
+    }
+
+    // Categoría
+    function getIMCCategory(imc) {
+      if (imc < 18.5) return {cat: "Bajo peso", cls:"under"};
+      if (imc < 25) return {cat: "Peso normal", cls:"normal"};
+      if (imc < 30) return {cat: "Sobrepeso", cls:"over"};
+      return {cat: "Obesidad", cls:"obese"};
+    }
+
+    // Extra info
+    function getExtraInfo(imc, edad, sexo) {
+      let txt = "";
+      if (edad && edad < 18) {
+        txt += "<b>Nota:</b> El IMC para menores de edad debe ser interpretado por un pediatra.";
+      } else if (edad && edad > 60) {
+        txt += "<b>Nota:</b> En adultos mayores, el IMC puede no reflejar la masa muscular o salud ósea.";
+      }
+      if (sexo === "f" && imc > 25) {
+        txt += "<br><b>Dato:</b> Las mujeres pueden tener mayor porcentaje de grasa corporal y menor masa muscular que los hombres.";
+      }
+      return txt;
+    }
+
+    // Mostrar resultado
+    function mostrarResultado(imc, cat, edad, sexo) {
+      resultSection.style.display = "block";
+      imcValue.textContent = imc.toFixed(2);
+      imcCategory.textContent = cat.cat;
+      imcCategory.className = "imc-category " + cat.cls;
+      imcAdvice.textContent = getAdvice(cat.cat, edad, sexo);
+      extraInfo.innerHTML = getExtraInfo(imc, edad, sexo);
+    }
+
+    // Guardar en historial
+    function guardarHistorial(datos) {
+      history.push(datos);
+      localStorage.setItem("imcHistory", JSON.stringify(history));
+      renderHistory();
+    }
+
+    // Render historial
+    function renderHistory() {
+      historyCount.textContent = history.length;
+      historyList.innerHTML = "";
+      history.slice(-7).reverse().forEach((h, i) => {
+        let txt = `${h.name ? h.name + ', ' : ''}${h.age ? h.age + ' años, ' : ''}${h.gender === "f" ? "♀" : h.gender === "m" ? "♂" : ""} Estatura: ${h.height}${metric ? "m" : "in"}, Peso: ${h.weight}${metric ? "kg" : "lb"} ⟶ <b>${h.imc.toFixed(2)}</b> <span class="imc-category ${getIMCCategory(h.imc).cls}">${getIMCCategory(h.imc).cat}</span>`;
+        const li = document.createElement("li");
+        li.innerHTML = txt;
+        li.title = "Click para recargar datos";
+        li.onclick = () => {
+          document.getElementById("name").value = h.name || "";
+          document.getElementById("age").value = h.age || "";
+          document.getElementById("gender").value = h.gender || "";
+          document.getElementById("height").value = h.height || "";
+          document.getElementById("weight").value = h.weight || "";
+        };
+        historyList.appendChild(li);
+      });
+    }
+
+    // Limpiar historial
+    clearHistoryBtn.onclick = () => {
+      history = [];
+      localStorage.removeItem("imcHistory");
+      renderHistory();
+    };
+
+    // Cambio de unidades
+    unitBtn.onclick = () => {
+      metric = !metric;
+      if (metric) {
+        heightUnit.textContent = "m";
+        weightUnit.textContent = "kg";
+        unitBtn.textContent = "Cambiar a US/Imperial";
+        document.getElementById("height").placeholder = "Ej: 1.70";
+        document.getElementById("weight").placeholder = "Ej: 68.5";
+      } else {
+        heightUnit.textContent = "in";
+        weightUnit.textContent = "lb";
+        unitBtn.textContent = "Cambiar a Internacional";
+        document.getElementById("height").placeholder = "Ej: 67";
+        document.getElementById("weight").placeholder = "Ej: 150";
+      }
+      // Limpiar campos y resultado para evitar confusión
+      imcForm.reset();
+      resultSection.style.display = "none";
+    };
+
+    // Evento formulario
+    imcForm.onsubmit = (e) => {
+      e.preventDefault();
+      let name = document.getElementById("name").value.trim();
+      let age = parseInt(document.getElementById("age").value);
+      let gender = document.getElementById("gender").value;
+      let height = parseFloat(document.getElementById("height").value);
+      let weight = parseFloat(document.getElementById("weight").value);
+
+      // Validación
+      if (isNaN(height) || isNaN(weight) || height <= 0 || weight <= 0) {
+        alert("Por favor, ingresa estatura y peso válidos.");
+        return;
+      }
+      if (!metric) {
+        if (height < 20 || height > 100 || weight < 50 || weight > 660) {
+          alert("Valores fuera de rango. Estatura en pulgadas (20-100), peso en libras (50-660).");
+          return;
+        }
+      } else {
+        if (height < 0.5 || height > 2.5 || weight < 20 || weight > 300) {
+          alert("Valores fuera de rango. Estatura en metros (0.5-2.5), peso en kg (20-300).");
+          return;
+        }
+      }
+
+      let imc = calcularIMC(weight, height, metric);
+      let cat = getIMCCategory(imc);
+
+      mostrarResultado(imc, cat, age, gender);
+
+      guardarHistorial({name, age, gender, height, weight, imc});
+    };
+
+    // Cargar historial
+    if (localStorage.getItem("imcHistory")) {
+      history = JSON.parse(localStorage.getItem("imcHistory"));
+      renderHistory();
+    }
+
+    // Tooltip para tabla
+    document.querySelectorAll('.imc-table td, .imc-table th').forEach(el => {
+      el.title = "Categorías IMC según la OMS para adultos";
+    });
+
+  </script>
+</body>
+</html>
